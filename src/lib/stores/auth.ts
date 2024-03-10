@@ -12,11 +12,3 @@ export const authStore = writable<AuthStore>({
   isLoading: true,
 });
 
-export const authHandlers = {
-  signin: async () => {
-    await signInWithRedirect(auth, provider);
-  },
-  signout: async () => {
-    await signOut(auth);
-  },
-};

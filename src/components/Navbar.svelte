@@ -3,9 +3,9 @@
   import { createEventDispatcher } from "svelte";
   import { Link, link, navigate } from "svelte-navigator";
   import { auth } from "../lib/firebase";
+  import lang from "../lib/lang";
+  import langStore from "../lib/stores/lang";
   const dispatch = createEventDispatcher();
-
-  export let isLogin: boolean;
 </script>
 
 <div class="navbar bg-gradient-to-r from-primary to-gray-900 text-white">
@@ -21,22 +21,33 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
-      <li><Link to="/main">Home</Link></li>
-      {#if isLogin}
-        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <li
-          on:click={async () => {
-            await signOut(auth);
-            navigate("/");
-          }}
-        >
-          <!-- svelte-ignore a11y-missing-attribute -->
-          <a>Log out</a>
-        </li>
-      {:else}
-        <li><Link to="/login">Log in</Link></li>
-      {/if}
+      <li><Link to="/main">{lang[$langStore].home}</Link></li>
+      <!-- svelte-ignore a11y-missing-attribute -->
+      <li>
+        <details>
+          <summary> EN/TH </summary>
+          <!-- svelte-ignore a11y-no-static-element-interactions -->
+          <ul class="p-2 bg-gray-900 rounded translate-y-2">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <li>
+              <a
+                on:click={() => {
+                  langStore.update(() => "en");
+                }}>EN</a
+              >
+            </li>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <li>
+              <a
+                on:click={() => {
+                  langStore.update(() => "th");
+                }}>TH</a
+              >
+            </li>
+          </ul>
+        </details>
+      </li>
     </ul>
   </div>
 </div>

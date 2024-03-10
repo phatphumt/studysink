@@ -9,8 +9,13 @@
   import { authStore } from "./lib/stores/auth";
   import Main from "./views/Main.svelte";
   import ProtectedRoute from "./components/routing/ProtectedRoute.svelte";
+  import lang from "./lib/stores/lang";
+  import Create from "./views/Create.svelte";
 
   const onEnter = () => {
+    const localLang: "en" | "th" =
+      <"en" | "th">localStorage.getItem("lang") || "en";
+    lang.update(() => localLang);
     onAuthStateChanged(auth, (user) => {
       authStore.set({
         currentUser: user,
@@ -24,15 +29,20 @@
 
 <Router primary={false}>
   <header>
-    <Navbar on:entered={onEnter} isLogin={$authStore.currentUser !== null} />
+    <Navbar on:entered={onEnter} />
   </header>
-  <main>
-    <Route path="/"><Home /></Route>
-    <Route path="/login">
-      <Login />
-    </Route>
-    <ProtectedRoute path="/main">
-      <Main></Main>
-    </ProtectedRoute>
+  <main class="min-h-[92.6vh] bg-gradient-to-t from-gray-900 to-gray-800">
+    {#if !$authStore.isLoading}
+      <Route path="/"><Home /></Route>
+      <Route path="/login">
+        <Login />
+      </Route>
+      <ProtectedRoute path="/main">
+        <Main />
+      </ProtectedRoute>
+      <ProtectedRoute path="/create">
+        <Create />
+      </ProtectedRoute>
+    {/if}
   </main>
 </Router>
